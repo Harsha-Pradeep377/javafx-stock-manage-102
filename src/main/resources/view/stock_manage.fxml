@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.stockmanage102.controller.StockManageController">
+   <children>
+      <Label alignment="CENTER" layoutY="3.0" prefHeight="60.0" prefWidth="601.0" style="-fx-background-color: #3498db;" text="Dash Board" textFill="#da0909">
+         <font>
+            <Font name="System Bold" size="29.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnCust" layoutX="80.0" layoutY="175.0" mnemonicParsing="false" text="Customer">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnItm" layoutX="258.0" layoutY="175.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="85.0" text="Item">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnSpl" layoutX="415.0" layoutY="175.0" mnemonicParsing="false" text="Supplier">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
