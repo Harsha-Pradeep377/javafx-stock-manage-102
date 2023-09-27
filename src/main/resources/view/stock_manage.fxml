@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.stockmanage102.controller.StockManageController">
    <children>
       <Label alignment="CENTER" layoutY="3.0" prefHeight="60.0" prefWidth="601.0" style="-fx-background-color: #3498db;" text="Dash Board" textFill="#da0909">
@@ -13,7 +12,7 @@
             <Font name="System Bold" size="29.0" />
          </font>
       </Label>
-      <Button fx:id="btnCust" layoutX="80.0" layoutY="175.0" mnemonicParsing="false" text="Customer">
+      <Button fx:id="btnCust" layoutX="80.0" layoutY="175.0" mnemonicParsing="false" onAction="#btnCustomerOnAction" text="Customer">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
