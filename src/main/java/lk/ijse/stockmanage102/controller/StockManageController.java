@@ -13,6 +13,7 @@ public class StockManageController {
 
 
     public AnchorPane rootNode;
+    public AnchorPane dashNode;
 
     public void btnCustomerOnAction(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(this.getClass().getResource("/view/customer_form.fxml"));
@@ -33,5 +34,11 @@ public class StockManageController {
         primaryStage.setTitle("Item Manage Form");
         primaryStage.centerOnScreen();
 
+    }
+
+    public void btnSupplierOnAction(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(this.getClass().getResource("/view/supplier_form.fxml"));
+        this.dashNode.getChildren().clear();
+        this.dashNode.getChildren().add(root);
     }
 }
