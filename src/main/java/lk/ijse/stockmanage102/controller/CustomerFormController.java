@@ -44,6 +44,6 @@ public class CustomerFormController {
         txtId.setText("");
         txtName.setText("");
         txtAddress.setText("");
-        txtTel.setText("");
+        txtId.setText("");
     }
 }
