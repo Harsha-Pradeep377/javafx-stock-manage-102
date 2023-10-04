@@ -7,3 +7,10 @@ create table customer(
     address text not null,
     tel varchar(50) not null
     );
+
+create table item(
+    itemCode varchar(50) primary key,
+    description varchar(50) not null,
+    unitPrize decimal(6,2) not null,
+    qtyOnHand int not null
+);
