@@ -1,14 +1,25 @@
 package lk.ijse.stockmanage102.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import lk.ijse.stockmanage102.db.DBConnection;
+import lk.ijse.stockmanage102.dto.Customer;
+import lk.ijse.stockmanage102.dto.Item;
+import lk.ijse.stockmanage102.dto.tm.CustomerTm;
+import lk.ijse.stockmanage102.dto.tm.ItemTm;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class CustomerFormController {
@@ -17,6 +28,61 @@ public class CustomerFormController {
     public TextField txtName;
     public TextField txtAddress;
     public TextField txtTel;
+    @FXML
+    private TableColumn<?, ?> colAddress;
+
+    @FXML
+    private TableColumn<?, ?> colId;
+
+    @FXML
+    private TableColumn<?, ?> colName;
+
+    @FXML
+    private TableColumn<?, ?> colTel;
+
+    @FXML
+    private TableView<CustomerTm> customerTable;
+
+    public void initialize() throws SQLException {
+        System.out.println("Customer form just loaded");
+
+        setCellValueFactory();
+        ArrayList<Customer> customerList = loadAllCustomers();
+        setTableData(customerList);
+    }
+
+    private void setTableData(ArrayList<Customer> customerList) {
+        ObservableList<CustomerTm> obList = FXCollections.observableArrayList();
+
+        for(Customer customer : customerList){
+            CustomerTm tm = new CustomerTm(customer.getId(), customer.getName(), customer.getAddress(), customer.getTel());
+            obList.add(tm);
+        }
+        customerTable.setItems(obList);
+
+    }
+
+    private void setCellValueFactory() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colTel.setCellValueFactory(new PropertyValueFactory<>("tel"));
+    }
+
+    private ArrayList<Customer> loadAllCustomers() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        String sql = "SELECT*FROM customer";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet rst = preparedStatement.executeQuery();
+        ArrayList<Customer> customers = new ArrayList<>();
+        while (rst.next()) {
+            Customer customer = new Customer(rst.getString(1), rst.getString(2), rst.getString(3), rst.getString(4));
+            customers.add(customer);
+        }
+        return customers;
+
+    }
+
 
     public void btnSaveOnAction(ActionEvent actionEvent) {
         String id = txtId.getText();
@@ -65,12 +131,8 @@ public class CustomerFormController {
             ResultSet rst = preparedStatement.executeQuery();
 
             if(rst.next()){
-                String txtId = rst.getString(1);
-                String txtName = rst.getString(2);
-                String txtAddress = rst.getString(3);
-                String txtTel = rst.getString(4);
-
-                setFields(txtId,txtName,txtAddress,txtTel);
+                Customer customer = new Customer(rst.getString(1),rst.getString(2),rst.getString(3),rst.getString(4));
+                setFields(customer);
             }else{
                 new Alert(Alert.AlertType.WARNING,"Customer not found").show();
             }
@@ -79,11 +141,11 @@ public class CustomerFormController {
         }
     }
 
-    private void setFields(String txtId, String txtName, String txtAddress, String txtTel) {
-        this.txtId.setText(txtId);
-        this.txtName.setText(txtName);
-        this.txtAddress.setText(txtAddress);
-        this.txtTel.setText(txtTel);
+    private void setFields(Customer customer) {
+        this.txtId.setText(customer.getId());
+        this.txtName.setText(customer.getName());
+        this.txtAddress.setText(customer.getAddress());
+        this.txtTel.setText(customer.getTel());
     }
 
     public void btnUpdateOnAction(ActionEvent actionEvent) {

@@ -1,21 +1,29 @@
 package lk.ijse.stockmanage102.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.stockmanage102.db.DBConnection;
 import lk.ijse.stockmanage102.dto.Item;
+import lk.ijse.stockmanage102.dto.tm.ItemTm;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ItemFormController {
     public AnchorPane itemNode;
@@ -23,6 +31,59 @@ public class ItemFormController {
     public TextField txtDescription;
     public TextField txtUnitPrice;
     public TextField txtQty;
+    @FXML
+    private TableColumn<?, ?> colDescription;
+
+    @FXML
+    private TableColumn<?, ?> colItemCode;
+
+    @FXML
+    private TableColumn<?, ?> colUnitPrice;
+
+    @FXML
+    private TableColumn<?, ?> colQtyOnHand;
+    @FXML
+    private TableView<ItemTm> itemTable;
+
+    public void initialize() throws SQLException {
+        System.out.println("Item form just loaded");
+
+        setCellValueFactory();
+        ArrayList<Item> itemList = loadAllItems();
+        setTableData(itemList);
+    }
+
+    private void setTableData(ArrayList<Item> itemList) {
+        ObservableList<ItemTm> obList = FXCollections.observableArrayList();
+
+        for(Item item : itemList){
+            ItemTm tm = new ItemTm(item.getItemCode(),item.getDescription(),item.getUnitPrice(),item.getQtyOnHand());
+            obList.add(tm);
+        }
+        itemTable.setItems(obList);
+
+    }
+
+    private void setCellValueFactory() {
+        colItemCode.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        colQtyOnHand.setCellValueFactory(new PropertyValueFactory<>("qtyOnHand"));
+    }
+
+    private ArrayList<Item> loadAllItems() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        String sql = "SELECT*FROM item";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet rst = preparedStatement.executeQuery();
+        ArrayList<Item> items = new ArrayList<>();
+        while (rst.next()) {
+            Item item = new Item(rst.getString(1), rst.getString(2), rst.getDouble(3), rst.getInt(4));
+            items.add(item);
+        }
+        return items;
+
+    }
 
     public void btnDachboardOnAction(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(this.getClass().getResource("/view/stock_manage.fxml"));
