@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.stockmanage102.db.DBConnection;
+import lk.ijse.stockmanage102.dto.Item;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -81,11 +82,13 @@ public class ItemFormController {
 
             if(rst.next()){
                 String txtItemCode = rst.getString(1);
-                String txtDescription = (rst.getString(2));
-                String txtUnitPrice = Double.toString(rst.getDouble(3));
-                String txtQty = Integer.toString(rst.getInt(4));
+                String txtDescription = rst.getString(2);
+                Double txtUnitPrice = rst.getDouble(3);
+                Integer txtQty = rst.getInt(4);
 
-                setFields(txtItemCode,txtDescription,txtUnitPrice,txtQty);
+                Item item = new Item(txtItemCode,txtDescription,txtUnitPrice,txtQty);
+
+                setFields(item);
             }else{
                 new Alert(Alert.AlertType.WARNING,"Item not found").show();
             }
@@ -94,11 +97,11 @@ public class ItemFormController {
         }
     }
 
-    private void setFields(String txtItemCode, String txtDescription, String txtUnitPrice, String txtQty) {
-        this.txtItemCode.setText(txtItemCode);
-        this.txtDescription.setText(txtDescription);
-        this.txtUnitPrice.setText(txtUnitPrice);
-        this.txtQty.setText(txtQty);
+    private void setFields(Item item) {
+        this.txtItemCode.setText(item.getItemCode());
+        this.txtDescription.setText(item.getDescription());
+        this.txtUnitPrice.setText(Double.toString(item.getUnitPrice()));
+        this.txtQty.setText(Integer.toString(item.getQtyOnHand()));
     }
 
     public void btnUpdateOnAction(ActionEvent actionEvent) {
