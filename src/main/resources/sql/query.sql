@@ -14,3 +14,10 @@ create table item(
     unitPrize decimal(6,2) not null,
     qtyOnHand int not null
 );
+
+create table supplier(
+    supId varchar(15) primary key,
+    name varchar(50) not null,
+    shop varchar(20) not null,
+    tel varchar(15) not null
+);

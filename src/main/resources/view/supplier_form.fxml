@@ -13,16 +13,26 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <TextField layoutX="112.0" layoutY="72.0" promptText="Item Code" />
-      <TextField layoutX="332.0" layoutY="72.0" promptText="Description" />
-      <TextField layoutX="112.0" layoutY="129.0" prefHeight="25.0" prefWidth="149.0" promptText="Unit Price" />
-      <TextField layoutX="332.0" layoutY="129.0" promptText="Quantity On Hand" />
-      <Button layoutX="424.0" layoutY="169.0" mnemonicParsing="false" text="Save">
+      <TextField fx:id="txtSupId" layoutX="112.0" layoutY="72.0" onAction="#txtOnAction" promptText="Supplier Id" />
+      <TextField fx:id="txtSupName" layoutX="332.0" layoutY="72.0" promptText="Name" />
+      <TextField fx:id="txtShop" layoutX="112.0" layoutY="129.0" prefHeight="25.0" prefWidth="149.0" promptText="Shop" />
+      <TextField fx:id="txtTel" layoutX="332.0" layoutY="129.0" promptText="Tel" />
+      <Button layoutX="424.0" layoutY="169.0" mnemonicParsing="false" onAction="#btnSaveOnAction" text="Save">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="345.0" layoutY="169.0" mnemonicParsing="false" text="Clear">
+      <Button layoutX="201.0" layoutY="169.0" mnemonicParsing="false" onAction="#btnClear" text="Clear">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="341.0" layoutY="169.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" text="Update">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="269.0" layoutY="169.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" text="Delete">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
