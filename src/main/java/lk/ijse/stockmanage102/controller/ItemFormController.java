@@ -7,15 +7,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.stockmanage102.db.DBConnection;
+import lk.ijse.stockmanage102.dto.Customer;
 import lk.ijse.stockmanage102.dto.Item;
+import lk.ijse.stockmanage102.dto.Supplier;
 import lk.ijse.stockmanage102.dto.tm.ItemTm;
 
 import java.io.IOException;
@@ -24,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ItemFormController {
     public AnchorPane itemNode;
@@ -31,6 +31,10 @@ public class ItemFormController {
     public TextField txtDescription;
     public TextField txtUnitPrice;
     public TextField txtQty;
+    public ComboBox cmbSupId;
+    public TextField txtSupName;
+    public TextField txtSupShop;
+    public TextField txtSupTel;
     @FXML
     private TableColumn<?, ?> colDescription;
 
@@ -50,7 +54,30 @@ public class ItemFormController {
 
         setCellValueFactory();
         ArrayList<Item> itemList = loadAllItems();
+        List<Supplier> supplierList = loadAllSupplierIds();
+        setSupplierIds(supplierList);
         setTableData(itemList);
+    }
+
+    private void setSupplierIds(List<Supplier> supplierList) {
+        ObservableList<String> obList = FXCollections.observableArrayList();
+        for(Supplier supplier : supplierList){
+            obList.add(supplier.getSupId());
+        }
+        cmbSupId.setItems(obList);
+    }
+
+    private List<Supplier> loadAllSupplierIds() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        String sql = "SELECT*FROM supplier";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet rst = preparedStatement.executeQuery();
+        List<Supplier> suppliers = new ArrayList<>();
+        while (rst.next()) {
+
+            suppliers.add(new Supplier(rst.getString(1), rst.getString(2), rst.getString(3), rst.getString(4)));
+        }
+        return suppliers;
     }
 
     private void setTableData(ArrayList<Item> itemList) {
@@ -204,6 +231,29 @@ public class ItemFormController {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         }
     }
+    public void cmbOnAction(ActionEvent actionEvent) {
+        String supplierId = String.valueOf(cmbSupId.getValue());
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            String sql = "SELECT*FROM supplier WHERE supId = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,supplierId);
+            ResultSet rst = preparedStatement.executeQuery();
 
+            if(rst.next()){
+                Supplier supplier = new Supplier(rst.getString(1),rst.getString(2),rst.getString(3),rst.getString(4));
+                setSupplierFields(supplier);
+            }else{
+                new Alert(Alert.AlertType.WARNING,"Supplier not found").show();
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
+        }
+    }
 
+    private void setSupplierFields(Supplier supplier) {
+        this.txtSupName.setText(supplier.getSupName());
+        this.txtSupShop.setText(supplier.getShop());
+        this.txtSupTel.setText(supplier.getTel());
+    }
 }
